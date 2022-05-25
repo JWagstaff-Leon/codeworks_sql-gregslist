@@ -46,9 +46,9 @@ namespace w10d3.Repositories
         {
             string sql = @"
             INSERT INTO jobs
-            (jobTitle, rate, hours, description, company)
+            (jobTitle, rate, hours, description, company, creatorId)
             VALUES
-            (@JobTitle, @Rate, @Hours, @Description, @Company);
+            (@JobTitle, @Rate, @Hours, @Description, @Company, @CreatorId);
             SELECT LAST_INSERT_ID();";
             data.Id = _db.ExecuteScalar<int>(sql, data);
             data.CreatedAt = DateTime.Now;

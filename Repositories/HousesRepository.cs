@@ -46,9 +46,9 @@ namespace w10d3.Repositories
         {
             string sql = @"
             INSERT INTO houses
-            (year, price, bathrooms, bedrooms, levels, imgUrl, description)
+            (year, price, bathrooms, bedrooms, levels, imgUrl, description, creatorId)
             VALUES
-            (@Year, @Price, @Bathrooms, @Bedrooms, @Levels, @ImgUrl, @Description);
+            (@Year, @Price, @Bathrooms, @Bedrooms, @Levels, @ImgUrl, @Description, @CreatorId);
             SELECT LAST_INSERT_ID();";
             data.Id = _db.ExecuteScalar<int>(sql, data);
             data.CreatedAt = DateTime.Now;
