@@ -31,7 +31,7 @@ namespace w10d3.Models
         [Required]
         public string ImgUrl { get; set; }
 
-        public string creatorId { get; set; }
+        public string CreatorId { get; set; }
         public Profile Creator { get; set; }
     }
 }

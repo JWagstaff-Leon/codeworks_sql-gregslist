@@ -3,6 +3,9 @@ using w10d3.Services;
 using w10d3.Models;
 using System.Collections.Generic;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using CodeWorks.Auth0Provider;
 
 namespace w10d3.Controllers
 {
@@ -11,6 +14,7 @@ namespace w10d3.Controllers
     public class CarsController : ControllerBase
     {
         private readonly CarsService _serv;
+
         public CarsController(CarsService serv)
         {
             _serv = serv;
@@ -46,11 +50,15 @@ namespace w10d3.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Car> Create([FromBody] Car data)
+        [Authorize]
+        public async Task<ActionResult<Car>> Create([FromBody] Car data)
         {
             try
             {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                data.CreatorId = userInfo.Id;
                 Car created = _serv.Create(data);
+                created.Creator = userInfo;
                 return Ok(created);
             }
             catch(Exception e)
@@ -60,10 +68,13 @@ namespace w10d3.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Car> Edit(int id, [FromBody] Car update)
+        [Authorize]
+        public async Task<ActionResult<Car>> Edit(int id, [FromBody] Car update)
         {
             try
             {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                update.CreatorId = userInfo.Id;
                 update.Id = id;
                 Car updated = _serv.Edit(update);
                 return Ok(updated);
@@ -75,11 +86,13 @@ namespace w10d3.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Car> Remove(int id)
+        [Authorize]
+        public async Task<ActionResult<Car>> Remove(int id)
         {
             try
             {
-                Car removed = _serv.Remove(id);
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                Car removed = _serv.Remove(id, userInfo.Id);
                 return Ok(removed);
             }
             catch(Exception e)

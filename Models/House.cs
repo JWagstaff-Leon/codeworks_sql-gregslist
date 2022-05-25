@@ -34,7 +34,7 @@ namespace w10d3.Models
         [MaxLength(300)]
         public string Description { get; set; }
 
-        public string creatorId { get; set; }
+        public string CreatorId { get; set; }
         public Profile Creator { get; set; }
     }
 }

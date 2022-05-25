@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using w10d3.Models;
 using w10d3.Services;
+using w10d3.Models;
+using System.Collections.Generic;
+using System;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using CodeWorks.Auth0Provider;
 
-namespace w10d2.Controllers
+namespace w10d3.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class JobsController : ControllerBase
     {
-        JobsService _serv;
+        private readonly JobsService _serv;
 
         public JobsController(JobsService serv)
         {
@@ -24,6 +27,7 @@ namespace w10d2.Controllers
             {
                 List<Job> found = _serv.GetAll();
                 return Ok(found);
+                
             }
             catch(Exception e)
             {
@@ -46,11 +50,15 @@ namespace w10d2.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Job> Create([FromBody] Job data)
+        [Authorize]
+        public async Task<ActionResult<Job>> Create([FromBody] Job data)
         {
             try
             {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                data.CreatorId = userInfo.Id;
                 Job created = _serv.Create(data);
+                created.Creator = userInfo;
                 return Ok(created);
             }
             catch(Exception e)
@@ -60,10 +68,13 @@ namespace w10d2.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Job> Edit(int id, [FromBody] Job update)
+        [Authorize]
+        public async Task<ActionResult<Job>> Edit(int id, [FromBody] Job update)
         {
             try
             {
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                update.CreatorId = userInfo.Id;
                 update.Id = id;
                 Job updated = _serv.Edit(update);
                 return Ok(updated);
@@ -75,11 +86,13 @@ namespace w10d2.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Job> Remove(int id)
+        [Authorize]
+        public async Task<ActionResult<Job>> Remove(int id)
         {
             try
             {
-                Job removed = _serv.Remove(id);
+                Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+                Job removed = _serv.Remove(id, userInfo.Id);
                 return Ok(removed);
             }
             catch(Exception e)
