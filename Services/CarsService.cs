@@ -47,7 +47,7 @@ namespace w10d3.Services
             edited.Model = update.Model ?? edited.Model;
             edited.Color = update.Color ?? edited.Color;
             edited.Year = update.Year;
-            edited.Year = update.Price;
+            edited.Price = update.Price;
             edited.Description = update.Description ?? edited.Description;
             edited.ImgUrl = update.ImgUrl ?? edited.ImgUrl;
 

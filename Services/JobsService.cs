@@ -48,7 +48,6 @@ namespace w10d3.Services
             edited.Hours = update.Hours;
             edited.Description = update.Description ?? edited.Description;
             edited.Company = update.Company ?? edited.Company;
-            edited.Company = update.Company ?? edited.Company;
 
             return _repo.Edit(edited);
         }

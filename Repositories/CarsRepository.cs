@@ -67,7 +67,7 @@ namespace w10d3.Repositories
                 Year = @Year,
                 Price = @Price,
                 Description = @Description,
-                ImgUrl = @ImgUrl,
+                ImgUrl = @ImgUrl
             WHERE id = @Id";
             _db.Execute(sql, update);
             update.UpdatedAt = DateTime.Now;
